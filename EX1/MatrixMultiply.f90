@@ -99,8 +99,8 @@ do n=100,1000,100
 
 end do
 
-open(1,file="time.txt")
-do n=1,10
+open(1,file="time_results.txt")
+do nn=1,10
     write(1,*) time(:,n)
 end do
 close(1)

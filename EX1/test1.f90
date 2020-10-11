@@ -1,16 +1,17 @@
 program test1
 implicit none
 
-double precision, dimension(:), allocatable ::vect
-allocate(vect(10))
-do 10 ii=1,10
+real :: num=3.13
+CHARACTER(len=255) :: path
+  CALL getcwd(path)
+  WRITE(*,*) TRIM(path)
 
-enddo 
+open(10,file="prova2.txt",status='new',action='write')
 
-print *, vect !for example $a^b= \int dx\ \phi(x)$
-deallocate(vect)
+write(10,*) num
 
-stop
+close(10)
+
 end program test1
 
 

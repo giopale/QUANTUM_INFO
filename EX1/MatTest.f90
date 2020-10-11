@@ -77,14 +77,15 @@ end module
 program MatTest
 use Functions
 implicit none
-
 integer :: nn=0, ii, jj, kk, ierror, size
 real, dimension(:,:), allocatable :: A,B,C,C1,C2
 real :: start=0, finish=0, sum=0
 real, dimension(:,:), allocatable :: time
 
+CALL chdir("/Users/gpalermo/Google\ Drive/QUANTUM\ INFO/QUANTUM_INFO/EX1 ")
 
 write(*,*) "	*** Matrix multiplication test program ***	"
+
 do
     write(*,*) "Enter an integer number or press enter to run an automatic test"
     read(*,'(i10)',iostat=ierror) nn
@@ -122,6 +123,7 @@ if(nn/=0) then
     deallocate(A,B,C,C1,C2)
 else
     allocate(time(3,10))
+    open(unit=1,file="time_results.txt",action='write',status='unknown')
     do ii=1,3,1
         size=ii*100
         print '("Running test on size ", i6, " matrix...")', size
@@ -152,11 +154,9 @@ else
         deallocate(A,B,C,C1,C2)
 
         print*, "Done"
-    end do
-    open(unit=1,file="time_results.txt")
-    do jj=1,10
-        print*,time(1,jj),time(2,jj),time(3,jj)
-        write(1,*) time(:,jj)
+
+        print*,size,time(1,ii),time(2,ii),time(3,ii)
+        write(1,*) size, time(:,ii)
     end do
     close(1)
 end if
