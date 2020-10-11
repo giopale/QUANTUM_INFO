@@ -124,7 +124,7 @@ if(nn/=0) then
 else
     allocate(time(3,10))
     open(unit=1,file="time_results.txt",action='write',status='unknown')
-    do ii=1,3,1
+    do ii=1,11,1
         size=ii*100
         print '("Running test on size ", i6, " matrix...")', size
         allocate(A(size,size),B(size,size),C(size,size),C1(size,size),C2(size,size))
