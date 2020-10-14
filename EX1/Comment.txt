@@ -1,0 +1,9 @@
+PALERMO GIORGIO - EX1
+
+I wrote two programs:
+
+The first, sum.f90, is relative to Ex 2 and shows some wrong operations are performed due to overflow and underflow.
+
+The second, MatTest.f03, performs some performance tests on different matrix multiplication algorithms, as suggested in ex3. 
+In particular, I implemented a program that runs and times the multiplication of two random square matrices of arbitrary size using three different algorithms and stores the time results in a text file.
+I repeated the tests compiling the program with different optimization flags (from -O0 to -O3); a comparison of different multiplication times for different algorithms and optimization flags can be seen in the timevsizeOX.png files contained in this folder.

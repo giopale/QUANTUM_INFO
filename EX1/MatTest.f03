@@ -1,7 +1,7 @@
 ! **********************************************************************
 ! Project           : Quantum information, Ex1
 ! 
-! Program name      : MatTest.f90
+! Program name      : MatTest.f03
 ! 
 ! Author            : Giorgio Palermo
 ! 
@@ -128,25 +128,20 @@ do ii=1,nn,1
     call random_number(A)
     call random_number(B)
 
-
     call cpu_time(start)
     call LoopMult(A,B,C)
     call cpu_time(finish)
     time(1,ii)=finish-start
-    ! print '("Time Loop= ",f6.5," seconds.")',finish-start
 
     call cpu_time(start)
     call LoopMultColumns(A,B,C1)
     call cpu_time(finish)
     time(2,ii)=finish-start
-    ! print '("Time = ",f6.5," seconds.")',finish-start
 
     call cpu_time(start)
     call IntrinsicMult(A,B,C2)
     call cpu_time(finish)
     time(3,ii)=finish-start
-    ! print '("Time = ",f6.5," seconds.")',finish-start
-    ! print '("Times [Loop,ColumnsLoop,Intrinsic], seconds = ",f6.5,f6.5,f6.5)',time(1,ii),time(2,ii),time(3,ii)
     deallocate(A,B,C,C1,C2)
 
     print*, "Done"
