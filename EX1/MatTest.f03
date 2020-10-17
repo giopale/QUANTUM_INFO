@@ -84,7 +84,6 @@ real, dimension(:,:), allocatable :: time
 character(len=30), dimension(:), allocatable :: args
 
 character(len=50) :: filename
-CALL chdir("/Users/gpalermo/Google\ Drive/QUANTUM\ INFO/QUANTUM_INFO/EX1 ")
 write(*,*)
 write(*,*) "	*** Matrix multiplication test program ***	"
 

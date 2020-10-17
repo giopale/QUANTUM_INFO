@@ -75,13 +75,14 @@ module stuff
             implicit none
             type(dmatrix) :: dmat
             character(*) :: filename
+            character(30) :: auxname
             integer :: jj
-            filename = filename // ".txt"
-            ! open(unit=10,file=filename,action='write',status='unknown')
-            do jj=1,dmat%N(2)
-                write(*,*) jj!dmat%elem(1,jj)
+            auxname = trim(filename // ".txt")
+            open(unit=10,file=auxname,action='write',status='unknown')
+            do jj=1,dmat%N(1)
+                write(10,*) dmat%elem(jj,:)
             end do
-            ! close(10)
+            close(10)
         end subroutine MatToFile
                 
 
@@ -91,7 +92,7 @@ program DMatrixCODE
     use stuff
     implicit none
     type(dmatrix) :: dmat
-    integer, dimension(2) ::shape = (/ 6, 2 /)
+    integer, dimension(2) ::shape = (/ 6, 3 /)
     integer :: ii,jj
 
     write(*,*)
@@ -104,15 +105,9 @@ program DMatrixCODE
     allocate(dmat%elem(dmat%N(1),dmat%N(2)))
     call InitUni(dmat)
 
-    write(*,*) "Matrix elements:"
-    do ii=1,shape(1),1
-        write(*,*) dmat%elem(ii,:)
-    end do
 
     call MatToFile(dmat,"matrix")
 
-    ! C'è un errore di accesso in MatToFile: da risolvere
-    
 end program
 
 
