@@ -1,0 +1,142 @@
+\documentclass[a4paper]{article}
+
+%% Language and font encodings
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+
+%% Sets page size and margins
+\usepackage[a4paper,top=3cm,bottom=2cm,left=2.7cm,right=2.7cm,marginparwidth=1.75cm]{geometry}
+
+%% Useful packages
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, all colors=blue]{hyperref} %referenze linkate
+\usepackage{booktabs}
+\usepackage{siunitx}  %notaz. espon. con \num{} e unità di misura in SI con \si{}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{bm}
+\usepackage{caption} 
+\usepackage{indentfirst}
+\usepackage{physics} 
+\usepackage{rotating}
+\usepackage{tabularx}
+\usepackage{url}
+\usepackage{pst-plot}
+\usepackage{comment} %per usare l'ambiente {comment}
+\usepackage{float} 
+\usepackage{subfig}
+\usepackage[americanvoltages]{circuitikz} %per disegnare circuiti
+\usepackage{tikz}
+\usepackage{mathtools} %per allineare su più linee in ambiente {align} o {align*}
+\usepackage{cancel}
+\usepackage{listings}
+\renewcommand{\CancelColor}{\color{lightgray}}
+%\setlength{\parindent}{0cm}
+
+%%%%%%%%%% CODE LISTING %%%%%%%%%%%
+%New colors 
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+%Code listing style named "mystyle"
+\lstdefinestyle{mystyle}{
+  language=[90]Fortran,
+  backgroundcolor=\color{backcolour},   commentstyle=\color{codegreen},
+  keywordstyle=\color{magenta},
+  numberstyle=\tiny\color{codegray},
+  stringstyle=\color{codepurple},
+  basicstyle=\ttfamily\footnotesize,
+  breakatwhitespace=false,         
+  breaklines=true,                 
+  captionpos=b,                    
+  keepspaces=true,                 
+  numbers=left,                    
+  numbersep=5pt,                  
+  showspaces=false,                
+  showstringspaces=false,
+  showtabs=false,                  
+  tabsize=2
+}
+%"mystyle" code listing set
+\lstset{style=mystyle}
+
+
+\graphicspath{{Figure/}}
+\captionsetup{format=hang,labelfont={sf,bf},font=small}
+\captionsetup{tableposition=top,figureposition=bottom,font=small}
+\captionsetup[table]{skip=8pt}
+
+
+\author{Giorgio Palermo}
+
+
+
+
+\begin{document}
+\hypersetup{linkcolor = black}
+\hypersetup{linkcolor = blue}
+
+\begin{center}
+    \textbf{MASTER'S DEGREE IN PHYSICS}
+    
+    Academic Year 2020-2021
+    
+    \medskip
+    \textbf{QUANTUM INFORMATION}
+\end{center}
+
+\vspace{0.0cm}
+Student: Giorgio Palermo
+
+Student ID: 1238258
+
+Date: October 20, 2020
+\begin{center}
+\textbf{EXERCISE 2}
+\medskip
+\end{center}
+\noindent
+\textit{In this report I will review my solution to EX2, which is about the definition of new types, functions, subroutines and interfaces.}
+
+\section*{Theory}
+I based my solution of the proposed exercise on the definition of the \lstinline{type}, \lstinline{function}, \lstinline{subroutine} and \lstinline{interface} constructs.
+
+\section*{Code Development}
+The basic brick of this program is the \lstinline{dmatrix} type, which I defined as a new type containing a \lstinline{double complex} matrix and some of its properties: shape, track and determinant.
+
+The \lstinline{InitUni} function is a \lstinline{type(dmatrix)} function that calls the \lstinline{clarnv} LAPACK subroutine to fill the matrix (\lstinline{dmatrix%elem}) with random complex numbers.
+Since \lstinline{clarnv} only works on scalar or vectors, I implemented a cycle to fill the matrix; I chose to loop over columns because this is the fastest algorithm since the matrix is stored column-wise.
+I decided that in my program the shape of a \lstinline{dmatrix} has to be defined separately before the call to the initialization function, therefore I put a check at the beginning of it to verify that both dimensions are defined and positive.
+
+The \lstinline{Tr} function computes the trace summing over diagonal elements of a \lstinline{dmatrix%elem} matrix given as input.
+
+\lstinline{Adj} is a \lstinline{type(dmatrix)} function which aim is to compute the transposed conjugate of a \lstinline{type(dmatrix)} input.
+To do this it copies an input \lstinline{dmatrix} type element into a local new variable and computes the adjoint using the intrinsic elemental function \lstinline{conjg()}; the transposition is then performed using the intrinsic \lstinline{transpose()} function.
+
+I assigned the \lstinline{Adj} and the \lstinline{InitUni} functions to two interface operators: \lstinline{.Adj.} and \lstinline{.Init.}.
+
+All this is tested in a simple program, \lstinline{DMatrixCODE}, which calls all the above mentioned functions and operators.
+More specifically, it defines and initializes a new \lstinline{dmatrix} type, computes its adjoint, and writes both matrices on two separate text files, using the \lstinline{MatToFile} subroutine.
+
+
+
+\section*{Results}
+
+SCREENSHOTS OF THE OUTPUT FILES
+
+\section*{Self evaluation}
+Writing this exercise I learned how to define new types, functions, subroutines and interface operators; I also learned to call external LAPACK functions and to compile the code including the linear algebra library.
+
+I wonder if in REF TO TRACE LISTING function is sufficient to check for the dimensions of the matrix to be positive or it would be recommendable to check if the memory for the \lstinline{dmatrix%elem} is already allocated, in order to avoid errors.
+
+
+
+
+
+\end{document}
