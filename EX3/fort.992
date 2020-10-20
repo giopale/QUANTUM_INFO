@@ -1,0 +1,26 @@
+
+ 	*** Matrix multiplication test program ***	
+Filename: test1.txt            Testing up to size    500
+
+
+Running test on size    100 matrix...
+ Done
+        Size       ByRows[s]       ByCols[s]       Intrinsic[s]   
+         100   4.35000006E-03   5.69199957E-03   2.07000412E-04
+Running test on size    200 matrix...
+ Done
+        Size       ByRows[s]       ByCols[s]       Intrinsic[s]   
+         200   3.92700024E-02   3.73790003E-02   6.69002533E-04
+Running test on size    300 matrix...
+ Done
+        Size       ByRows[s]       ByCols[s]       Intrinsic[s]   
+         300  0.137801990      0.115703002       1.71300769E-03
+Running test on size    400 matrix...
+ Done
+        Size       ByRows[s]       ByCols[s]       Intrinsic[s]   
+         400  0.303808004      0.271656990       3.35198641E-03
+Running test on size    500 matrix...
+ Done
+        Size       ByRows[s]       ByCols[s]       Intrinsic[s]   
+         500  0.686969101      0.555948019       6.37602806E-03
+ End of the program reached, good job!
