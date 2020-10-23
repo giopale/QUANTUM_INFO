@@ -1,0 +1,162 @@
+! 		DOCUMENTATION FILE:
+! **********************************************************************
+! Project           : Quantum information, Ex3
+! 
+! Program name      : MatTest1.f03
+! 
+! Author            : Giorgio Palermo
+! 
+! Date created      : 20201007
+! 
+! Purpose           : To test some operations with matrices
+! 
+! Revision History  :
+!
+! Date        Author      Ref    Revision (Date in YYYYMMDD format) 
+!
+! 20201020    G. Palermo         Debug subroutine implementation
+! 20201021    G. Palermo         Change all reals to doubles
+! **********************************************************************
+
+This file includes two modules and a program:
+	module FUNCTIONS
+	module DEBUG
+	program MATTEST1
+
+*********	module FUNCTIONS	**************
+This module contains all the functions used in the program.
+
+	subroutine LOOPMULT(A,B,C)
+		Arguments:
+			A,B 		double precision,intent(in)
+	        C 			double precision,intent(out),allocatable
+
+		Performs multiplication of double precision matrices
+		A,B and writes the result on C.
+		Multiplication is performed by rows.
+
+		Preallocation is needed only for A,B (input).
+
+		The subroutine checks the match of size(A,2) and size(B,1)
+		and stops the execution of the program if the check fails.
+
+	subroutine LOOPMULTCOLUMNS(A,B,C)
+		Arguments:
+			A,B 		double precision,intent(in)
+        	C 			double precision,intent(out),allocatable
+
+		Performs multiplication of double precision matrices
+		A,B and writes the result on C.
+		Multiplication is performed by columns.
+
+		Preallocation is needed only for A,B (input).
+
+		The subroutine checks the match of size(A,2) and size(B,1)
+		and stops the execution of the program if the check fails.
+
+	subroutine INTRINSICMULT(A,B,C)
+		Arguments:
+			A,B 		double precision,intent(in)
+        	C 			double precision,intent(out),allocatable
+
+		Performs multiplication of double precision matrices
+		A,B and writes the result on C.
+		Multiplication is performed via intrinsic function MATMUL(A,B).
+
+		Preallocation is needed only for A,B (input).
+
+		The subroutine checks the match of size(A,2) and size(B,1)
+		and stops the execution of the program if the check fails.
+
+
+
+
+*********	module DEBUG0	**************
+This is a first version of a module containing debug functions.
+
+	function CHECKDIM(activation,A,B,C)
+		Output: 
+			CheckDim		logical
+		Arguments:
+			activation		integer
+			A,B,C 			double precision, dimension(:,:)
+		This function checks the correct dimensions for matrix multiplication.
+		.true. -> Error detected
+		.false. -> Everything fine
+
+		If A,B,C are allocated: A*B and C dimension check.
+		If A,B are allocated: A*B dimension check.
+
+	function CHECKTRACE(activation,A)
+		Output: 
+			CheckTrace		logical
+		Arguments:
+			activation		integer
+			A 			double precision, dimension(:,:)
+		This function checks if the matrix is square, then computes the 
+		trace and checks it to be positive.
+		.true. -> Error detected
+		.false. -> Everything fine
+		
+
+*********	program MATTEST1	**************
+This program tests the computational performances of different matrix
+multiplication algorithms, by measuring CPU_TIME().
+The test is performed by multiplying two randomly generated square matrices
+using 1:LOOPMULT, 2:LOOPMULTCOLUMNS and 3:INTRINSICMULT.
+The program allows to either choose the matrix size in advance or perform an 
+automatic test. Computation times are measured increasing the matrix size by
+100 each step up to maximum size.
+
+I/O interface:
+The program is called on bash by 
+	$ ./MatTest1.out [filename] [size]
+where both [filename] and [size] are optional arguments. The filename must be
+given without extension, since it is added automatically. [size] is the maximum
+matrix size that will be tested.
+If no arguments are provided:
+	- filename will be asked
+	- test will run up to default max_size (500)
+
+The output is given on file on four columns:
+
+	SIZE 	T1[s] 	T2[s] 	T3[s]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
