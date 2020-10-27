@@ -69,36 +69,6 @@ This module contains all the functions used in the program.
 		and stops the execution of the program if the check fails.
 
 
-
-
-*********	module DEBUG0	**************
-This is a first version of a module containing debug functions.
-
-	function CHECKDIM(activation,A,B,C)
-		Output: 
-			CheckDim		logical
-		Arguments:
-			activation		integer
-			A,B,C 			double precision, dimension(:,:)
-		This function checks the correct dimensions for matrix multiplication.
-		.true. -> Error detected
-		.false. -> Everything fine
-
-		If A,B,C are allocated: A*B and C dimension check.
-		If A,B are allocated: A*B dimension check.
-
-	function CHECKTRACE(activation,A)
-		Output: 
-			CheckTrace		logical
-		Arguments:
-			activation		integer
-			A 			double precision, dimension(:,:)
-		This function checks if the matrix is square, then computes the 
-		trace and checks it to be positive.
-		.true. -> Error detected
-		.false. -> Everything fine
-		
-
 *********	program MATTEST1	**************
 This program tests the computational performances of different matrix
 multiplication algorithms, by measuring CPU_TIME().
