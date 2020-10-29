@@ -1,12 +1,13 @@
 #!/bin/bash
 max_size=1500
-gfortran MatTest.f03 -o MatTest.out -O0
-./MatTest.out time_resultsO0 $max_size
-gfortran MatTest.f03 -o MatTest.out -O1
-./MatTest.out time_resultsO1 $max_size
-gfortran MatTest.f03 -o MatTest.out -O2
-./MatTest.out time_resultsO2 $max_size
-gfortran MatTest.f03 -o MatTest.out -O3
-./MatTest.out time_resultsO3 $max_size
+ifort MatTest1.f90 -o MatTest1_intel.out -parallel -heap-arrays -O0
+./MatTest1_intel.out time_results_parallel_O0 $max_size
+ifort MatTest1.f90 -o MatTest1_intel.out -parallel -heap-arrays -O1
+./MatTest1_intel.out time_results_parallel_O1 $max_size
+ifort MatTest1.f90 -o MatTest1_intel.out -parallel -heap-arrays -O2
+./MatTest1_intel.out time_results_parallel_O2 $max_size
+ifort MatTest1.f90 -o MatTest1_intel.out -parallel -heap-arrays -O3
+./MatTest1_intel.out time_results_parallel_O3 $max_size
+
 
 gnuplot sin.gp
