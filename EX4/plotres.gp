@@ -6,9 +6,9 @@ set xlabel 'Matrix size'
 set ylabel 'Multiplication time [s]'
 set logscale y
 set logscale x
-plot "time_ByRows.txt" using 1:2 title 'StdLoop' with lines, \
-	 "time_ByCols.txt" using 1:2 title 'InvLoop' with lines, \
-	 "time_Intrinsic.txt" using 1:2 title 'Intrinsic' with lines
+plot "result.dat" using 1:2 title 'StdLoop' with lines, \
+	 "result.dat" using 1:3 title 'InvLoop' with lines, \
+	 "result.dat" using 1:4 title 'Intrinsic' with lines
 
 # set output 'timevsize_parallel_O1.png'
 # set title 'Multiplication time parallel - O1'

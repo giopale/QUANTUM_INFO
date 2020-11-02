@@ -65,7 +65,7 @@ module Functions
 
 module cosmod
     contains
-    subroutine MatTest(filename, size, verbose, result)
+    subroutine MatTest(filename, size_input, verbose, result)
         use Functions
         use Debug
         implicit none
@@ -73,7 +73,8 @@ module cosmod
         character(*), intent(in) :: filename
         character(*), intent(in) :: verbose
         character(len=50) :: filename_in, filename_alpha, filename_bravo, message
-        integer, intent(in) :: size
+        double precision, intent(in) :: size_input
+        integer :: size
         integer :: nn=5, ii=0, status
         integer :: oo=6 ! to suppress screen output set oo=something
                         ! this won't work for subroutines
@@ -83,7 +84,7 @@ module cosmod
         double precision, dimension(:,:), allocatable :: A,B,C,C1,C2
         double precision, dimension(1,3) :: time
         character(len=30), dimension(:), allocatable :: args
-
+        size=floor(size_input)
         ! Select if verbose
         select case(verbose)
         case("y")
@@ -152,7 +153,7 @@ module cosmod
         character(*), intent(in) :: filename
         character(len=100) :: msg
         integer, intent(in) :: grid_dim
-        integer, dimension(:), allocatable,intent(out) :: grid
+        double precision, dimension(:), allocatable,intent(out) :: grid
         integer :: ii=1, ios
 
         open(unit=100,file=filename,iostat=ios,iomsg=msg)
@@ -163,8 +164,8 @@ module cosmod
 
         allocate(grid(grid_dim))
         read(100,*,iostat=ios, end=997,iomsg=msg) grid 
-        997 print*, ios
-        print*, grid(:)
+        997 print*, "Grid read with exit status: ", ios
+        ! print*, grid(:)
         close(100)
     end subroutine ReadGrid
     end module cosmod
@@ -174,24 +175,33 @@ program cos
     use cosmod
     implicit none
 
-    integer grid_dim,ii,ios
     double precision, dimension(:,:), allocatable :: results_all
-    integer, dimension(:), allocatable :: grid
+    double precision, dimension(:), allocatable :: grid
     double precision, dimension(4) :: result
+    character(len=30), dimension(:), allocatable :: args
+    integer grid_dim,ii,ios, num_args
+    character(len=30) :: filename
 
-
-    grid_dim=5
+    num_args = command_argument_count()
+    allocate(args(num_args)) 
+    call get_command_argument(1,args(1))
+    print*, args(1)
+    filename = "result.dat"//args(1)
+    grid_dim=10
     allocate(grid(grid_dim))
     allocate(results_all(grid_dim,4))
 
     call ReadGrid("grid.dat", grid_dim,grid)
-    open(unit=78,file="result.dat",status="unknown",iostat=ios)
+    open(unit=78,file=filename,status="unknown",iostat=ios)
+    write(*,*) "Testing matrix of size: "
     do ii=1,grid_dim,1
         call MatTest("time", grid(ii), "n", result)
+        write(*,*) floor(grid(ii))
         results_all(ii,:) = result(:)
-        print*, results_all(ii,:)
+        ! print*, results_all(ii,:)
         write(78,*) results_all(ii,:)
     end do
+    write(*,*) "Done!"
     ! write(78,'(4G15.5)') results_all
     close(78)
 
