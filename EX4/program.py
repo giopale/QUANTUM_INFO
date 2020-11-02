@@ -1,10 +1,10 @@
 import os
-import subprocess
+# import subprocess
 import numpy
 
 
 fid=open("grid.dat","w+")
-numbers=numpy.logspace(1.,numpy.log10(501),num=10)
+numbers=numpy.logspace(1.,numpy.log10(2500),num=10)
 numbers=numpy.floor(numbers)
 
 for item in numbers:
