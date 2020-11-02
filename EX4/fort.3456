@@ -1,0 +1,30 @@
+
+    *** Matrix multiplication test program ***  
+ Running test...
+ Size       ByRows[s]       ByCols[s]       Intrinsic[s]   
+  100    0.42250E-02    0.44840E-02    0.22200E-03
+ Done
+
+    *** Matrix multiplication test program ***  
+ Running test...
+ Size       ByRows[s]       ByCols[s]       Intrinsic[s]   
+  200    0.35808E-01    0.35934E-01    0.11440E-02
+ Done
+
+    *** Matrix multiplication test program ***  
+ Running test...
+ Size       ByRows[s]       ByCols[s]       Intrinsic[s]   
+  300    0.13694        0.12012        0.29310E-02
+ Done
+
+    *** Matrix multiplication test program ***  
+ Running test...
+ Size       ByRows[s]       ByCols[s]       Intrinsic[s]   
+  400    0.34145        0.26941        0.63590E-02
+ Done
+
+    *** Matrix multiplication test program ***  
+ Running test...
+ Size       ByRows[s]       ByCols[s]       Intrinsic[s]   
+  500    0.66817        0.54921        0.14838E-01
+ Done

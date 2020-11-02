@@ -163,7 +163,8 @@ module cosmod
 
         allocate(grid(grid_dim))
         read(100,*,iostat=ios, end=997,iomsg=msg) grid 
-        997 print*, ios, msg, grid(:)
+        997 print*, ios
+        print*, grid(:)
         close(100)
     end subroutine ReadGrid
     end module cosmod
@@ -173,12 +174,26 @@ program cos
     use cosmod
     implicit none
 
-    integer grid_dim
+    integer grid_dim,ii,ios
+    double precision, dimension(:,:), allocatable :: results_all
     integer, dimension(:), allocatable :: grid
+    double precision, dimension(4) :: result
 
-    grid_dim=7
+
+    grid_dim=5
     allocate(grid(grid_dim))
-    
+    allocate(results_all(grid_dim,4))
+
+    call ReadGrid("grid.dat", grid_dim,grid)
+    open(unit=78,file="result.dat",status="unknown",iostat=ios)
+    do ii=1,grid_dim,1
+        call MatTest("time", grid(ii), "n", result)
+        results_all(ii,:) = result(:)
+        print*, results_all(ii,:)
+        write(78,*) results_all(ii,:)
+    end do
+    ! write(78,'(4G15.5)') results_all
+    close(78)
 
 end program cos
 
