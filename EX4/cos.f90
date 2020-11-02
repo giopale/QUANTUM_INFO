@@ -186,7 +186,8 @@ program cos
     allocate(args(num_args)) 
     call get_command_argument(1,args(1))
     print*, args(1)
-    filename = "result.dat"//args(1)
+    filename = "result"// trim(args(1))// ".dat"
+    print*, filename 
     grid_dim=10
     allocate(grid(grid_dim))
     allocate(results_all(grid_dim,4))

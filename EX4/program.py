@@ -17,6 +17,7 @@ for item in opt_flags:
 	os.system(comp_comm)
 	command = "./cos.out " + item
 	os.system(command)
+
 os.system("gnuplot plotres.gp")
 
 
