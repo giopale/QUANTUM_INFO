@@ -1,6 +1,6 @@
 # Fdb version 3
-["pdflatex"] 1604352254 "EX4_PALERMO_REPORT.tex" "EX4_PALERMO_REPORT.pdf" "EX4_PALERMO_REPORT" 1604352255
-  "/dev/null" 1604352159 0 d41d8cd98f00b204e9800998ecf8427e ""
+["pdflatex"] 1604391200 "EX4_PALERMO_REPORT.tex" "EX4_PALERMO_REPORT.pdf" "EX4_PALERMO_REPORT" 1604391434
+  "/dev/null" 1604391405 0 d41d8cd98f00b204e9800998ecf8427e ""
   "/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1136849721 2971 def0b6c1f0b107b3b936def894055589 ""
   "/usr/local/texlive/2019/texmf-dist/fonts/map/fontname/texfonts.map" 1511824771 3332 103109f5612ad95229751940c61aada0 ""
   "/usr/local/texlive/2019/texmf-dist/fonts/tfm/jknappen/ec/ecbx1000.tfm" 1136768653 3584 2d666ecf6d466d8b007246bc2f94d9da ""
@@ -243,10 +243,12 @@
   "/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1557342064 3277517 23507ed665b4dd9046f0f2a94bbef2be ""
   "/usr/local/texlive/2019/texmf-var/web2c/pdftex/pdflatex.fmt" 1585740542 4259635 b50a9d52a101e1756fd4f6b9fe33bc98 ""
   "/usr/local/texlive/2019/texmf.cnf" 1557341546 577 d150fef99ac436ad1156e86b0892f6ef ""
-  "EX4_PALERMO_REPORT.aux" 1604352255 1499 95feaf7f032b7a83779a177f9b11728c "pdflatex"
-  "EX4_PALERMO_REPORT.out" 1604352255 41 8b170722119ad77064741dbc55b25c1d "pdflatex"
-  "EX4_PALERMO_REPORT.tex" 1604352252 14570 66664c579bf70af7d118106e160a3165 ""
+  "EX4_PALERMO_REPORT.aux" 1604391202 2079 c5f7bcdbe35045b5a16b70e602f6e1fe "pdflatex"
+  "EX4_PALERMO_REPORT.out" 1604391202 41 8b170722119ad77064741dbc55b25c1d "pdflatex"
+  "EX4_PALERMO_REPORT.tex" 1604391200 14794 88caaa0e2123d1898bcc21c826625188 ""
   "O0.eps" 1604351233 27682 0e1b5a50247a7ff92af094ae02d1233e ""
+  "O2.eps" 1604351233 28571 a0daedff1c858aa59dfdf1b2c2d64645 ""
+  "O3.eps" 1604351233 28854 db3f29ce2e4ee71d0d68d2bf645ff452 ""
   "Ofast.eps" 1604351233 28863 8e6bc92bc32b375be15d1dc0fae80b02 ""
   (generated)
   "EX4_PALERMO_REPORT.pdf"

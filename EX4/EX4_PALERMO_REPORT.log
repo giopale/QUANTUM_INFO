@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.4.1)  2 NOV 2020 22:24
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.4.1)  3 NOV 2020 09:13
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1417,12 +1417,51 @@ Package epstopdf Info: Source file: <O0.eps>
 (epstopdf)                    size: 9330 bytes
 (epstopdf)             Command: <repstopdf --outfile=O0-eps-converted-to.pdf O0
 .eps>
-(epstopdf)             \includegraphics on input line 357.
+(epstopdf)             \includegraphics on input line 352.
 Package epstopdf Info: Output file is already uptodate.
-<O0-eps-converted-to.pdf, id=202, 361.35pt x 252.945pt>
+<O0-eps-converted-to.pdf, id=201, 361.35pt x 252.945pt>
 File: O0-eps-converted-to.pdf Graphic file (type pdf)
 <use O0-eps-converted-to.pdf>
-Package pdftex.def Info: O0-eps-converted-to.pdf  used on input line 357.
+Package pdftex.def Info: O0-eps-converted-to.pdf  used on input line 352.
+(pdftex.def)             Requested size: 213.05243pt x 149.1359pt.
+Package epstopdf Info: Source file: <O2.eps>
+(epstopdf)                    date: 2020-11-02 22:07:13
+(epstopdf)                    size: 28571 bytes
+(epstopdf)             Output file: <O2-eps-converted-to.pdf>
+(epstopdf)                    date: 2020-11-03 09:09:48
+(epstopdf)                    size: 9925 bytes
+(epstopdf)             Command: <repstopdf --outfile=O2-eps-converted-to.pdf O2
+.eps>
+(epstopdf)             \includegraphics on input line 354.
+Package epstopdf Info: Output file is already uptodate.
+<O2-eps-converted-to.pdf, id=202, 361.35pt x 252.945pt>
+File: O2-eps-converted-to.pdf Graphic file (type pdf)
+<use O2-eps-converted-to.pdf>
+Package pdftex.def Info: O2-eps-converted-to.pdf  used on input line 354.
+(pdftex.def)             Requested size: 213.05243pt x 149.1359pt.
+LaTeX Font Info:    Try loading font information for T1+cmss on input line 355.
+
+ (/usr/local/texlive/2019/texmf-dist/tex/latex/base/t1cmss.fd
+File: t1cmss.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)
+
+LaTeX Warning: No positions in optional float specifier.
+               Default added (so using `tbp') on input line 359.
+
+Package epstopdf Info: Source file: <O3.eps>
+(epstopdf)                    date: 2020-11-02 22:07:13
+(epstopdf)                    size: 28854 bytes
+(epstopdf)             Output file: <O3-eps-converted-to.pdf>
+(epstopdf)                    date: 2020-11-03 09:09:49
+(epstopdf)                    size: 10052 bytes
+(epstopdf)             Command: <repstopdf --outfile=O3-eps-converted-to.pdf O3
+.eps>
+(epstopdf)             \includegraphics on input line 362.
+Package epstopdf Info: Output file is already uptodate.
+<O3-eps-converted-to.pdf, id=203, 361.35pt x 252.945pt>
+File: O3-eps-converted-to.pdf Graphic file (type pdf)
+<use O3-eps-converted-to.pdf>
+Package pdftex.def Info: O3-eps-converted-to.pdf  used on input line 362.
 (pdftex.def)             Requested size: 213.05243pt x 149.1359pt.
 Package epstopdf Info: Source file: <Ofast.eps>
 (epstopdf)                    date: 2020-11-02 22:07:13
@@ -1432,40 +1471,37 @@ Package epstopdf Info: Source file: <Ofast.eps>
 (epstopdf)                    size: 9957 bytes
 (epstopdf)             Command: <repstopdf --outfile=Ofast-eps-converted-to.pdf
  Ofast.eps>
-(epstopdf)             \includegraphics on input line 359.
+(epstopdf)             \includegraphics on input line 364.
 Package epstopdf Info: Output file is already uptodate.
-<Ofast-eps-converted-to.pdf, id=203, 361.35pt x 252.945pt>
+<Ofast-eps-converted-to.pdf, id=204, 361.35pt x 252.945pt>
 File: Ofast-eps-converted-to.pdf Graphic file (type pdf)
 <use Ofast-eps-converted-to.pdf>
-Package pdftex.def Info: Ofast-eps-converted-to.pdf  used on input line 359.
+Package pdftex.def Info: Ofast-eps-converted-to.pdf  used on input line 364.
 (pdftex.def)             Requested size: 213.05243pt x 149.1359pt.
-LaTeX Font Info:    Try loading font information for T1+cmss on input line 360.
-
- (/usr/local/texlive/2019/texmf-dist/tex/latex/base/t1cmss.fd
-File: t1cmss.fd 2014/09/29 v2.5h Standard LaTeX font definitions
-) [4 <./O0-eps-converted-to.pdf> <./Ofast-eps-converted-to.pdf>]
+[4 <./O0-eps-converted-to.pdf> <./O2-eps-converted-to.pdf>]
 
 Package caption Warning: Unused \captionsetup[table] on input line 92.
 See the caption package documentation for explanation.
 
-[5]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 374.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 374.
- (./EX4_PALERMO_REPORT.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 374.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 374.
+[5 <./O3-eps-converted-to.pdf> <./Ofast-eps-converted-to.pdf>]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 379.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 379.
+
+(./EX4_PALERMO_REPORT.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 379.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 379.
 Package rerunfilecheck Info: File `EX4_PALERMO_REPORT.out' has not changed.
 (rerunfilecheck)             Checksum: 8B170722119AD77064741DBC55B25C1D;41.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 374.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 379.
  ) 
 Here is how much of TeX's memory you used:
- 45200 strings out of 492616
- 928104 string characters out of 6129482
- 1620602 words of memory out of 5000000
- 48350 multiletter control sequences out of 15000+600000
+ 45213 strings out of 492616
+ 928410 string characters out of 6129482
+ 1613602 words of memory out of 5000000
+ 48363 multiletter control sequences out of 15000+600000
  546427 words of font info for 59 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 68i,12n,145p,682b,2241s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 68i,12n,145p,682b,2374s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}
 </usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><
 /usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></u
@@ -1480,10 +1516,10 @@ ive/2019/texmf-dist/fonts/type1/public/cm-super/sfsx0900.pfb></usr/local/texliv
 e/2019/texmf-dist/fonts/type1/public/cm-super/sfti1000.pfb></usr/local/texlive/
 2019/texmf-dist/fonts/type1/public/cm-super/sftt0800.pfb></usr/local/texlive/20
 19/texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb>
-Output written on EX4_PALERMO_REPORT.pdf (5 pages, 273986 bytes).
+Output written on EX4_PALERMO_REPORT.pdf (5 pages, 289825 bytes).
 PDF statistics:
- 329 PDF objects out of 1000 (max. 8388607)
- 286 compressed objects within 3 object streams
- 173 named destinations out of 1000 (max. 500000)
- 127 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 340 PDF objects out of 1000 (max. 8388607)
+ 293 compressed objects within 3 object streams
+ 171 named destinations out of 1000 (max. 500000)
+ 137 words of extra memory for PDF output out of 10000 (max. 10000000)
 

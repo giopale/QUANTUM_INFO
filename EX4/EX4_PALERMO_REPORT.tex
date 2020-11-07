@@ -135,7 +135,7 @@ For this reason I implemented a new version of \lstinline{MatTest} (reported bel
 \begin{itemize}
     \item it measures the computation time for a $N\times N$ matrix multiplication between random matrices, with $N$ given as input
     \item it outputs the results on different files for each method; the file name is passed as input; an optional live output of the results is implemented
-    \item the result is passed to the calling program using a one-dimensional array containing the matrix size and the time results.
+    \item the result is passed to the calling program using a one-dimensional array containing matrix size and time results for each iteration.
 
 \end{itemize}
 
@@ -154,7 +154,6 @@ subroutine MatTest(filename, size_input, verbose, result)
         integer :: size
         integer :: nn=5, ii=0, status
         integer :: oo=6 ! to suppress screen output set oo=something
-                        ! this won't work for subroutines
         double precision :: start=0, finish=0, sum=0
         ! Local Arrays
         double precision, dimension(4) :: result
@@ -184,9 +183,7 @@ subroutine MatTest(filename, size_input, verbose, result)
         open(unit=10,file=filename_in,action='write',position="append",status='unknown',iostat=status)
         open(unit=20,file=filename_alpha,action='write',position="append",status='unknown',iostat=status)
         open(unit=30,file=filename_bravo,action='write',position="append",status='unknown',iostat=status)
-        ! write(*,'("File opening status =" i3)') status ! Checking correct file opening
-        ! write(oo, '("Filename: ",a20," Testing up to size ", i6 )') filename, nn*100
-        ! write(oo,*)
+        write(oo,*)
         write(oo,*) "Running test..." ! courtesy message
         write(oo,*) "Size   ", "    ByRows[s]  ","     ByCols[s]   ","    Intrinsic[s]   "
         
@@ -211,7 +208,7 @@ subroutine MatTest(filename, size_input, verbose, result)
         deallocate(A,B,C,C1,C2)          
             
         write(oo,'(i5,3G15.5)') size,time(1,1),time(1,2),time(1,3)
-        write(10,'(i10, G15.5)') size, time(1,1)
+        write(10,'(i10, G15.5)') size, time(1,1) ! Write output on different files
         write(20,'(i10, G15.5)') size, time(1,2)
         write(30,'(i10, G15.5)') size, time(1,3)
         result(1) = dble(size)
@@ -285,11 +282,9 @@ program cos
         call MatTest("time", grid(ii), "n", result)
         write(*,*) floor(grid(ii))
         results_all(ii,:) = result(:)
-        ! print*, results_all(ii,:)
         write(78,*) results_all(ii,:)
     end do
     write(*,*) "Done!"
-    ! write(78,'(4G15.5)') results_all
     close(78)
 
 end program cos
@@ -297,7 +292,7 @@ end program cos
 
 \noindent To test the effective computing performace of my machine with different optimization flags, I wrote a Python script which has the following characteristics:
 \begin{itemize}
-    \item id defines a grid of points which range with exponential spacing from $N_{min}$ and $N_{max}$ arbitrarily chosen; this is made to have equally spaced points on the log-scaled graphs that will be discussed below
+    \item it defines a grid of points which range with exponential spacing from $N_{min}$ and $N_{max}$ arbitrarily chosen; this is made to have equally spaced points on the log-scaled graphs that will be discussed below
     \item saves the grid on file
     \item it calls the compiler for \lstinline{cos.f90}
     \item it repeats the operation for all optimization flags available
@@ -308,21 +303,21 @@ The Python script \lstinline[language=python]{program.py} is the following:
 import os
 import numpy
 
-fid=open("grid.dat","w+")
-numbers=numpy.logspace(1.,numpy.log10(2500),num=10)
+fid=open("grid.dat","w+")   #Open file
+numbers=numpy.logspace(1.,numpy.log10(2500),num=10) # Create the grid
 numbers=numpy.floor(numbers)
 for item in numbers:
     fid.write("%s\n" % item)
 fid.close()
 
 opt_flags = ["","-O1", "-O2", "-O3", "-Ofast"]
-for item in opt_flags:
-    comp_comm="gfortran cos.f90 -o cos.out "+item
-    os.system(comp_comm)
+for item in opt_flags:      #cycle through opt flags
+    comp_comm="gfortran cos.f90 -o cos.out "+item 
+    os.system(comp_comm)    #Call the compiler
     command = "./cos.out " + item
-    os.system(command)
+    os.system(command)  #Run the program
 
-os.system("gnuplot plotres.gp")
+os.system("gnuplot plotres.gp") #Call gnuplot for graphs
 
 
 \end{lstlisting}
@@ -349,22 +344,32 @@ plot "result.dat" using 1:2 title 'StdLoop' with points linestyle 1, \
 
 \section*{Results and self evaluation}
 Using Python script and \lstinline{program cos} I tested the computation times for matrices with sizes spanning from 10 to 250{}0.
-I collected these data into graphs, two of which can be seen in figure \ref{fig:timevsize}.
-The first graph contains data collected from an unoptimized algorithm, while data on the second were collected from a highly optimized algorithm.
+I collected these data into graphs, which can be seen in figure \ref{fig:timevsize1} and figure \ref{fig:timevsize2}.
+The first graph contains data collected from an unoptimized algorithm, while data on the remaining ones were collected from  algorithms with increasing optimization.
 \begin{figure}[h]
 \centering
 \subfloat{    \includegraphics[width=.48\textwidth]{O0.eps}
 \label{fig:no_optimization} }
+\subfloat{    \includegraphics[width=.48\textwidth]{O2.eps}
+\label{fig:O2}}
+\caption{Computation time as a function of the matrix size, without opt flags and with -O2.}
+\label{fig:timevsize1}
+\end{figure}
+
+\begin{figure}[]
+\centering
+\subfloat{    \includegraphics[width=.48\textwidth]{O3.eps}
+\label{fig:O3} }
 \subfloat{    \includegraphics[width=.48\textwidth]{Ofast.eps}
 \label{fig:Ofast}}
-\caption{Computation time as a function of the matrix size, with or without optimization flags.}
-\label{fig:timevsize}
+\caption{Computation time as a function of the matrix size, with -O3 and -Ofast.}
+\label{fig:timevsize2}
 \end{figure}
 On graph I plotted power laws $f(x) = ax^b,$ with $a,b$ parameters retrieved from the data via fit; these power laws look like straight lines on these plots because of the double logarithmic scale.
 The agreement between data and the power law is good for the "InvLoop" method (non-optimized), while is poor for the others; fit results for "Intrinsic" multiplication method are not shown since this data present an evident nonlinear behavior in both log-log plots.
 
 \noindent These graphs suggest that the computation times scale as power laws with the matrix size, at least for user-implemented methods.
-This statement might be verified building a more complex test involving repeated runs of the Python script, the elaboration of the data on a statistical base and the construction of confidence intervals.
+This statement might be verified building a more complex test involving repeated runs of the Python script, the elaboration of the data on a statistical base and the construction of confidence intervals for each data point.
 
 Building this program I learned for the first time how to write a Python script and some ways to pass arguments between different languages.
 
