@@ -8,12 +8,19 @@ module ModDmat
         double complex :: Det
     end type dmatrix
 
+    type histogram
+        integer :: Nbins, entries
+        double precision ::lower, upper
+        integer, dimension(:), allocatable :: h
+        double precision, dimension(:), allocatable :: bounds
+    end type histogram
+
     interface operator (.Adj.)
             module procedure Adj
     end interface 
 
     interface operator (.Init.)
-        module procedure InitUniDCplx
+        module procedure InitHerm
     end interface
 
     interface operator (.evalh.)
@@ -52,13 +59,14 @@ module ModDmat
             end if
         end function InitUniDouble
 
-        function InitUniDCplx(herm_1)
+        function InitHerm(herm_1,Nmat)
             ! Initializes a (n,n) complex hermitian matrix with 
             ! real and imaginary part taken from [0,1]
             ! uniform distributions.
-            ! Local scalars
+            ! call with: herm = herm .init. Nmat
             implicit none
-            integer :: Nmat
+            ! Local scalars
+            integer, intent(in) :: Nmat
             integer :: seed_dim =4
             integer :: info_zlaghe=0
             ! Local arrays
@@ -67,12 +75,12 @@ module ModDmat
             double complex, dimension(:), allocatable :: Work
             ! Local custom types
             type(dmatrix), intent(in) :: herm_1
-            type(dmatrix):: InitUniDCplx
+            type(dmatrix):: InitHerm
 
-            Nmat = herm_1%N(1)
+            ! Nmat = herm_1%N(1)
             allocate(Diag_Rnd(Nmat))
             allocate(Work(2*Nmat))
-            allocate(InitUniDCplx%elem(Nmat,Nmat))
+            ! allocate(InitHerm%elem(Nmat,Nmat))
 
             call random_seed()
             call random_seed(size=seed_dim)
@@ -83,11 +91,9 @@ module ModDmat
             call random_seed()
             call random_seed(get=seed)
             call zlaghe(Nmat, Nmat-1,Diag_Rnd,herm_1%elem, Nmat, seed, work, info_zlaghe)
-            InitUniDCplx = herm_1
+            InitHerm = herm_1
 
-        end function InitUniDCplx
-
-
+        end function InitHerm
 
         function DmatHermEv(herm_1)
             ! Computes eigenvalues of an hermitian matrix
@@ -124,6 +130,126 @@ module ModDmat
             DmatHermEv%eval=w
 
         end function DmatHermEv
+
+        function SpAvg(herm_1)
+            implicit none
+            ! Local custom types
+            type(dmatrix) :: herm_1
+            ! Local scalars
+            integer :: Nmat,sp_size
+            double precision :: s_avg, sp_sum
+            ! Local arrays
+            double precision, dimension(:), allocatable :: values, sp_0, sp
+            double precision, dimension(herm_1%N(1)-1) :: SpAvg
+            
+
+            allocate(values(herm_1%N(1)))
+            allocate(sp_0(herm_1%N(1)))
+            allocate(sp(size(sp_0-1)))
+            values = herm_1%eval
+                ! print*, "-2 values: ", values(1:3)
+            sp_0=values
+            values=eoshift(values, shift=-1)
+                ! print*, "-1 shifted values: ", values(1:3)
+            sp_0 = sp_0-values
+                ! print*, "0 sp_0: ", sp_0(1:3)
+            ! if (isnan(sum(sp_0))) stop '"sp" is a NaN'
+            sp=sp_0(2:)
+                ! print*, "1 sp: ", sp(1:3)
+            ! if (isnan(sum(sp))) stop '"sp" is a NaN first'
+            sp_size = size(sp)
+                ! print*, "2 sp_size: ", sp_size
+            ! if (size(sp)==0) stop 'size(sp)==0'
+            sp_sum = sum(sp)
+                ! print*, "3 sp_sum: ", sp_sum
+            ! if (isnan(sp_sum)) stop '"sum(sp)" is Nan'
+            s_avg = sp_sum/sp_size
+                ! print*, "4 s_avg :", s_avg
+            ! if (isnan(s_avg)) stop '"s_avg" is Nan'
+            sp=sp(:)/s_avg
+                ! print*, "5 sp :", sp(1:3)
+                ! print*, "6 sum(sp) :", sum(sp)
+            ! if (isnan(sum(sp))) stop '"sp" is a NaN'
+            ! Write(*,*)
+
+            SpAvg = sp
+        end function SpAvg
+
+        function LoadArray(filename,nrows,ncols)
+            ! Local scalars
+        character(*), intent(in) :: filename
+        character(len=100) :: msg
+        integer :: Ncols, Nrows, ios
+        ! Local arrays
+        double precision, dimension(:,:), allocatable :: indata
+        double precision, dimension(Nrows,Ncols) :: LoadArray
+
+        allocate(indata(Nrows,Ncols))
+        open(unit=129, file=filename, iostat=ios, iomsg=msg)
+        if(ios/=0) print*, msg
+        
+        read(129,*,iostat=ios,end=997,iomsg=msg) indata
+        997 continue
+        if (ios==0) write(*,*) 'File "', trim(filename), '" succesfully loaded...'
+        close(129)
+        LoadArray=indata
+
+        end function LoadArray
+
+        function InitHisto(low,up,Nb)
+        ! Local scalars
+        double precision, intent(in) ::low,up
+        integer, intent(in) :: Nb
+        double precision :: step
+        integer :: ii, Nentries
+        ! Local arrays
+        ! double precision, dimension(:), intent(in) :: indata
+        double precision, dimension(:), allocatable :: h_input_aux
+        integer, dimension(:), allocatable :: h_input
+
+        ! Local custom types
+        type(histogram) :: InitHisto
+
+        InitHisto%Nbins = Nb
+        InitHisto%lower = low
+        InitHisto%upper = up
+        allocate(InitHisto%bounds(Nb+1))
+        allocate(InitHisto%h(Nb))
+        InitHisto%bounds(1)=low
+        step=(up-low)/Nb
+        do ii=1,Nb
+            InitHisto%bounds(ii+1)=low + step*ii
+        end do
+        
+        end function InitHisto
+
+        function FillHisto(h,indata)
+            ! Local scalars
+        integer :: ii, Nentries
+        double precision :: step
+
+        ! Local arrays
+        double precision, dimension(:), intent(in) :: indata
+        double precision, dimension(:), allocatable :: h_input_aux
+        integer, dimension(:), allocatable :: h_input
+
+        ! Local custom types
+        type(histogram),intent(in) :: h
+        type(histogram) :: FillHisto
+
+        FillHisto = h
+        step = (h%upper - h%lower)/h%Nbins
+        Nentries=size(indata)
+        allocate(h_input_aux(Nentries),h_input(Nentries))
+        h_input_aux= indata
+        h_input_aux = ceiling(h_input_aux/step)
+        h_input=int(h_input_aux)
+        ! print*, h_input
+        FillHisto%h(h_input) = FillHisto%h(h_input)+1
+        FillHisto%entries = sum(FillHisto%h)
+
+
+        end function FillHisto
 
         subroutine Tr(dmat)
             ! Computes the trace and assigns it
