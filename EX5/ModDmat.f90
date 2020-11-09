@@ -12,7 +12,7 @@ module ModDmat
         integer :: Nbins, entries
         double precision ::lower, upper
         integer, dimension(:), allocatable :: h
-        double precision, dimension(:), allocatable :: bounds
+        double precision, dimension(:), allocatable :: bounds, bincenters
     end type histogram
 
     interface operator (.Adj.)
@@ -214,11 +214,14 @@ module ModDmat
         InitHisto%lower = low
         InitHisto%upper = up
         allocate(InitHisto%bounds(Nb+1))
+        allocate(InitHisto%bincenters(Nb))
         allocate(InitHisto%h(Nb))
         InitHisto%bounds(1)=low
+        InitHisto%h=0
         step=(up-low)/Nb
         do ii=1,Nb
             InitHisto%bounds(ii+1)=low + step*ii
+            InitHisto%bincenters(ii)= InitHisto%bounds(ii) + step/2
         end do
         
         end function InitHisto
@@ -244,7 +247,6 @@ module ModDmat
         h_input_aux= indata
         h_input_aux = ceiling(h_input_aux/step)
         h_input=int(h_input_aux)
-        ! print*, h_input
         FillHisto%h(h_input) = FillHisto%h(h_input)+1
         FillHisto%entries = sum(FillHisto%h)
 

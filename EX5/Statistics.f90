@@ -8,7 +8,7 @@ program Statistics
     use ModDebug
     implicit none
     ! Local scalars
-    character(len=100) :: msg
+    character(len=100) :: msg, x1, x2, filename
     integer :: Nsp, Ncy, ios, Nbins, ii
     double precision :: h_lenght, h_step, h_lower, h_upper
     ! Local arrays
@@ -29,7 +29,7 @@ program Statistics
     ! write(*,'(999G15.5)') suca1
 
     h_lower = 0
-    h_upper = 10
+    h_upper = 14
     Nbins=50
 
     
@@ -39,11 +39,15 @@ program Statistics
         h1=FillHisto(h1,indata(ii,:))
     end do
 
-    h1%entries=sum(h1%h)
-    print*, h1%entries
-    print*, h1%h(:)
+    write(x1,'(i4.4)') Nsp+1
+    write(x2,'(i4.4)') Ncy
+    filename = "Hist_"//trim(x1)//"_"//trim(x2)//".dat"
+    open(unit=55, file=filename, status='unknown', iostat=ios, iomsg=msg)
+    do ii=1,h1%Nbins,1
+        write(55,'(2G15.5)') h1%bincenters(ii), h1%h(ii)
+    end do
+    close(55)
 
-    ! Problema: per Ncy=13 non funziona print*, h1%h
 
 
     write(*,*) "Salad days are gone, missing hippy Jon..."
