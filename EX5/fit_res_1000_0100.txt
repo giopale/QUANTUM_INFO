@@ -1,0 +1,25 @@
+After 8 iterations the fit converged.
+final sum of squares of residuals : 4.56827e-07
+rel. change during last iteration : -2.68984e-07
+
+degrees of freedom    (FIT_NDF)                        : 46
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 9.96545e-05
+variance of residuals (reduced chisquare) = WSSR/ndf   : 9.93103e-09
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.0711517        +/- 0.001624     (2.282%)
+al              = -0.0393609       +/- 0.008603     (21.86%)
+b               = 0.899324         +/- 0.02368      (2.633%)
+be              = 1.05191          +/- 0.01529      (1.454%)
+
+correlation matrix of the fit parameters:
+                a      al     b      be     
+a               1.000 
+al              0.994  1.000 
+b               0.998  0.989  1.000 
+be             -0.979 -0.959 -0.984  1.000 
+
+plot "Hist_1000_0100.dat" using 1:2 title 'histo' with points linestyle 1, 	 f(x) with line linestyle 4,
+                                                                           	                            ^
+"plot_sp.gp" line 44: warning: ignoring trailing comma in plot command

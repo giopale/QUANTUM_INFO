@@ -12,7 +12,7 @@ program Eigenproblem
     character(len=100) :: filename, msg, x1,x2, format
     ! Local arrays
     double precision, dimension(:), allocatable :: spacings
-    double precision :: perc
+    double precision :: perc, start, end, time
     ! Local custom types
     type(dmatrix) :: herm_1
 
@@ -28,6 +28,7 @@ program Eigenproblem
     open(unit=55, file=filename, status='unknown', iostat=ios, iomsg=msg)
     ! write(55,'("! Matrix size: ", i4.5)') Nmat
     do jj=1,Ncycles
+        call cpu_time(start)
         allocate(herm_1%elem(Nmat,Nmat))
         herm_1=herm_1 .Init. Nmat
         herm_1 =.evalh.herm_1
@@ -41,14 +42,16 @@ program Eigenproblem
         129 deallocate(herm_1%elem)
         deallocate(herm_1%eval)
         write(55,*)
+        call cpu_time(end)
+        time=end-start
         perc=100*jj/Ncycles
-        write(*,*), floor(perc), "% done..."
+        write(*,'("Elapsed time [s]: ",(G9.2),(G9.2)," % done...")') time, floor(perc)
     end do
 
     close(55)
 
 
-write(*,*) "Che fa Muuu Muuu..."
+write(*,*) "Che fa Muuu Muuu..." ! closing message
 
 
 

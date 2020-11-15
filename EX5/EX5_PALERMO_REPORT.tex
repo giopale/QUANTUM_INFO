@@ -6,7 +6,7 @@
 \usepackage[T1]{fontenc}
 
 %% Sets page size and margins
-\usepackage[a4paper,top=3cm,bottom=2cm,left=2.7cm,right=2.7cm,marginparwidth=1.75cm]{geometry}
+\usepackage[a4paper,top=3cm,bottom=2.2cm,left=2.7cm,right=2.7cm,marginparwidth=1.75cm]{geometry}
 
 %% Useful packages
 \usepackage{amsmath}
@@ -40,8 +40,8 @@
 
 
 %%%%%%%%%% HEADERS AND FOOTERS %%%%%%%%%%%%
-\newcommand{\theexercise}{Ex. 4}
-\newcommand{\thedate}{November 2, 2020}
+\newcommand{\theexercise}{Ex. 5}
+\newcommand{\thedate}{November 9, 2020}
 \usepackage{fancyhdr}
 
 \pagestyle{fancy}
@@ -117,263 +117,298 @@ Student ID: 1238258
 
 Date: \thedate
 \begin{center}
-\textbf{EXERCISE 4}
+\textbf{EXERCISE 5}
 \medskip
 \end{center}
 \noindent
-\textit{In this report I will describe the details on how I tested the performance of my machine relative to matrix multiplication using Fortran subroutines and Python scripts; I will briefly evaluate trend of the data I obtained for matrices of sizes spanning from 10 to 2500 units. }
-\section{Theory}
-The basic concepts I used to build this program are relative to Fortran functions and subroutines, to the Fortran input-output procedures relative to text files and to the communication between Fortran programs and bash.
-I also used some basic commands of Python scripting language, including functions from NumPy and Os modules.
+\textit{In this report I am going to review how I solved problems 1 and 2 of Ex. 5, using Fortran functions and subroutines and Gnuplot scripts.}
+\section*{Theory}
+Mathematically, a Hermitian matrix is a matrix which is equal to its transpose conjugate.
+The Spectral theorem for finite dimension says that any hermitian matrix can be diagonalized by a unitary matrix; this implie that all eigenvalues of a Hermitian matrix $A$ with dimension $n$ are real, and that $A$ has $n$ independent eigenvectors.
+\[
+H=\left[\begin{array}{ccc}
+2 & 2+i & 4 \\
+2-i & 3 & i \\
+4 & -i & 1
+\end{array}\right]
+\]
+
+This, in particular, shows us the equivalence of Hermitian matrices to real diagonal matrices.
+We are going to use this fact to compare the distribution of distances of contiguous eigenvalues in Hermitian and real diagonal matrices in order to see if they are the same.
+
 
 \section*{Code Development}
+For this exercise I divided my code in two blocks, one for each problem: \lstinline{Eigenproblem.f90} and \lstinline{Statistics.f90}.
+The purpose of Eigenproblem.f90 is to solve problem 1 generate a dataset for problem 2.
 
-To develop the code I used to solve this exercise I started from the \lstinline{MatTest} subroutine I implemented for ex2 and I modified it.
-In the first place \lstinline{MatTest} performed a matrix multiplication test in an almost automatic mode: given the maximum size of the matrix it tested the computation time for different algorithms increasing the matrix size by 100 units steps.
-For this exercise the test couldn't be automatic anymore: the matrix size had to be specified arbitrarily iteration by iteration.
-For this reason I implemented a new version of \lstinline{MatTest} (reported below) with the following characteristics:
-\begin{itemize}
-    \item it measures the computation time for a $N\times N$ matrix multiplication between random matrices, with $N$ given as input
-    \item it outputs the results on different files for each method; the file name is passed as input; an optional live output of the results is implemented
-    \item the result is passed to the calling program using a one-dimensional array containing matrix size and time results for each iteration.
-
-\end{itemize}
-
-
+Problem 1 asked to consider an Hermitian matrix, so I chose as fundamental type of my problem the structure \lstinline{type(dmatrix)} used in previous assignments:
 
 \begin{lstlisting}
-subroutine MatTest(filename, size_input, verbose, result)
-        use Functions
-        use Debug
-        implicit none
-        ! Local scalars
-        character(*), intent(in) :: filename
-        character(*), intent(in) :: verbose
-        character(len=50) :: filename_in, filename_alpha, filename_bravo, message
-        double precision, intent(in) :: size_input
-        integer :: size
-        integer :: nn=5, ii=0, status
-        integer :: oo=6 ! to suppress screen output set oo=something
-        double precision :: start=0, finish=0, sum=0
-        ! Local Arrays
-        double precision, dimension(4) :: result
-        double precision, dimension(:,:), allocatable :: A,B,C,C1,C2
-        double precision, dimension(1,3) :: time
-        character(len=30), dimension(:), allocatable :: args
-        size=floor(size_input)
-        ! Select if verbose
-        select case(verbose)
-        case("y")
-            oo=6
-        case("n")
-            oo=3456
-        case default
-            oo=3456
-        end select
-
-        write(oo,*)
-        write(oo,*) "   *** Matrix multiplication test program ***  "
-        
-        ! filename_in = filename
-        filename_in = filename //"_ByRows"// ".txt"
-        filename_alpha = filename //"_ByCols" // ".txt"
-        filename_bravo = filename // "_Intrinsic" // ".txt"
-
-        ! Testing section 
-        open(unit=10,file=filename_in,action='write',position="append",status='unknown',iostat=status)
-        open(unit=20,file=filename_alpha,action='write',position="append",status='unknown',iostat=status)
-        open(unit=30,file=filename_bravo,action='write',position="append",status='unknown',iostat=status)
-        write(oo,*)
-        write(oo,*) "Running test..." ! courtesy message
-        write(oo,*) "Size   ", "    ByRows[s]  ","     ByCols[s]   ","    Intrinsic[s]   "
-        
-        allocate(A(size,size),B(size,size),C(size,size),C1(size,size),C2(size,size))
-        call random_number(A)
-        call random_number(B)
-        
-        call cpu_time(start)
-        call LoopMult(A,B,C)    ! by rows
-        call cpu_time(finish)
-        time(1,1)=finish-start
-
-        call cpu_time(start)
-        call LoopMultColumns(A,B,C1) ! by columns
-        call cpu_time(finish)
-        time(1,2)=finish-start
-
-        call cpu_time(start)
-        call IntrinsicMult(A,B,C2)  ! Intrinsic
-        call cpu_time(finish)
-        time(1,3)=finish-start
-        deallocate(A,B,C,C1,C2)          
-            
-        write(oo,'(i5,3G15.5)') size,time(1,1),time(1,2),time(1,3)
-        write(10,'(i10, G15.5)') size, time(1,1) ! Write output on different files
-        write(20,'(i10, G15.5)') size, time(1,2)
-        write(30,'(i10, G15.5)') size, time(1,3)
-        result(1) = dble(size)
-        result(2) = time(1,1)
-        result(3) = time(1,2)
-        result(4) = time(1,3)
-        write(oo,*) "Done"
-        close(10,iostat=status)
-        close(20,iostat=status)
-        close(20,iostat=status)
-
-    end subroutine MatTest
+type dmatrix
+    integer, dimension(2) :: N = (/ 0,0 /)
+    double complex, dimension(:,:), allocatable :: elem
+    double complex, dimension(:,:), allocatable :: evec
+    double precision, dimension(:), allocatable :: eval
+    double complex :: Trace
+    double complex :: Det
+end type dmatrix
 \end{lstlisting}
 
-\noindent To import the grid of points containing the matrix sizes to test I implemented the \lstinline{ReadGrid} subroutine: this piece of code reads as inputs the name of the file to read from (\lstinline{filename}) and the grid size (\lstinline{grid_dim}); the output is a one-dimensional array containing the points to test:
+The procedure to follow in order to create a meaningful dataset for problem two is the following:
+\begin{enumerate}
+    \item Matrix initialization
+    \item matrix diagonalization
+    \item normalized spacings calculation
+    \item output to file 
+    \item repeat
+\end{enumerate}
+Writing this code I wanted to assign as many operation as possible to functions, in order to be able to automatize them efficiently; I also used as many LAPACK functions as I could in order to call the best implementation possible for the various algorithms.
 
+For the first step of the algorithm I implemented \lstinline{function InitHerm(herm_1,Nmat)}: this function takes as input a \lstinline{type(dmatrix)} object and initializes it to a Hermitian matrix of size \lstinline{Nmat}.
+In particular, all array fields of the structure are allocated, all scalars are initialized to 0 and the \lstinline{double complex} array containing the matrix is initialized to a random Hermitian matrix using the LAPACK subroutine \lstinline{zlaghe}.
+
+The second step af the algorithm is performed in a similar way, using
 \begin{lstlisting}
-subroutine ReadGrid(filename,grid_dim, grid)
-        implicit none
-        character(*), intent(in) :: filename
-        character(len=100) :: msg
-        integer, intent(in) :: grid_dim
-        double precision, dimension(:), allocatable,intent(out) :: grid
-        integer :: ii=1, ios
-
-        open(unit=100,file=filename,iostat=ios,iomsg=msg)
-        if(ios/=0) then
-            write(*,*) msg
-            stop
-        end if
-
-        allocate(grid(grid_dim))
-        read(100,*,iostat=ios, end=997,iomsg=msg) grid 
-        997 print*, "Grid read with exit status: ", ios
-        ! print*, grid(:)
-        close(100)
-    end subroutine ReadGrid
+function DmatHermEv(herm_1)
 \end{lstlisting}
+wich is nothing else than a simple interface between the LAPACK solver \lstinline{zheev} and the custom \lstinline{type(dmatrix)}. I used in this program to manage complex matrices; as a matter of fact, \lstinline{herm_1} is a \lstinline{type(dmatrix)} data.
+The eigenvalues of the input matrix are stored in a crescent order in the \lstinline{herm_1%eval} field of the output.
 
-\noindent The real testing is implemented in \lstinline{program cos}.
-This program calls repeatedly the \lstinline{MatTest} subroutine, giving as input a different value of $N$ for each call.
-The grid is read from file using the \lstinline{ReadGrid} function, while the output results are collected in a two dimensional array \lstinline{results_all.}
-In order to be easily scripted with python, I wrote this program to take an input from bash (\lstinline{filename}), which I used to pass to the program the name of the file to store the results in.
+The last strictly computational step regards computation of normalized spacings between eigenvalues.
+I included this operation into
 \begin{lstlisting}
-program cos
-    use Functions
-    use cosmod
+function SpAvg(herm_1).
+\end{lstlisting}
+I computed normalized spacings using the \lstinline{eoshift} intrinsic function, which shifts all the elements of an array of an arbitrary amount along a specified direction.
+Subtracting a properly shifted array to the one containing the original eigenvalues gives the spacings $S_i,$ as shown in the code below:
+\begin{lstlisting}
+function SpAvg(herm_1)
     implicit none
+    ! Local custom types
+    type(dmatrix) :: herm_1
+    ! Local scalars
+    integer :: Nmat,sp_size
+    double precision :: s_avg, sp_sum
+    ! Local arrays
+    double precision, dimension(:), allocatable :: values, sp_0, sp
+    double precision, dimension(herm_1%N(1)-1) :: SpAvg
 
-    double precision, dimension(:,:), allocatable :: results_all
-    double precision, dimension(:), allocatable :: grid
-    double precision, dimension(4) :: result
-    character(len=30), dimension(:), allocatable :: args
-    integer grid_dim,ii,ios, num_args
-    character(len=30) :: filename
+    allocate(values(herm_1%N(1)))
+    allocate(sp_0(herm_1%N(1)))
+    allocate(sp(size(sp_0-1)))
+    values = herm_1%eval
+    sp_0=values
+    values=eoshift(values, shift=-1)
+    sp_0 = sp_0-values
+    sp=sp_0(2:)
+    sp_size = size(sp)
+    sp_sum = sum(sp)
+    s_avg = sp_sum/sp_size
+    sp=sp(:)/s_avg
 
-    num_args = command_argument_count()
-    allocate(args(num_args)) 
-    call get_command_argument(1,args(1))
-    print*, args(1)
-    filename = "result"// trim(args(1))// ".dat"
-    print*, filename 
-    grid_dim=10
-    allocate(grid(grid_dim))
-    allocate(results_all(grid_dim,4))
+    SpAvg = sp
+end function SpAvg
+\end{lstlisting}
+I chose to use this method because it allows not read explicitly all the eigenvalues with a loop in order to compute $S_i$.
 
-    call ReadGrid("grid.dat", grid_dim,grid)
-    open(unit=78,file=filename,status="unknown",iostat=ios)
-    write(*,*) "Testing matrix of size: "
-    do ii=1,grid_dim,1
-        call MatTest("time", grid(ii), "n", result)
-        write(*,*) floor(grid(ii))
-        results_all(ii,:) = result(:)
-        write(78,*) results_all(ii,:)
+Output and repetition are implemented in the main file \lstinline{Eigenproblem.f90} itself.
+This program is essentialy a loop that repeats initialization, diagonalization and output for a fixed matrix size (\lstinline{Nmat}) \lstinline{Ncycles} times.
+This program produces a dataset automatically named after the matrix size and the number of iterations (e.g.\lstinline{Sp_1000_0100.dat}) which contains in each row all the normalized spacings between the eigenvalues of an hermitian matrix for a \lstinline{Ncycles} number of rows.
+A live output of the percentage of completion of the loop is displayed on screen.
+
+The code is the following:
+\begin{lstlisting}
+! External modules:
+include "ModDmat.f90"
+include "ModDebug.f90"
+
+program Eigenproblem
+    use ModDmat
+    use ModDebug
+    implicit none
+    ! Local scalars
+    integer :: Nmat, Nsp, ios, ii,jj, Ncycles
+    character(len=100) :: filename, msg, x1,x2, format
+    ! Local arrays
+    double precision, dimension(:), allocatable :: spacings
+    double precision :: perc, start, end, time
+    ! Local custom types
+    type(dmatrix) :: herm_1
+
+    Nmat = 1000
+    Ncycles=100
+    ... Initialization of filename and some parameters ...
+    do jj=1,Ncycles
+        call cpu_time(start)
+        allocate(herm_1%elem(Nmat,Nmat))
+        herm_1=herm_1 .Init. Nmat
+        herm_1 =.evalh.herm_1
+        if (isnan(sum(herm_1%eval))) go to 129
+        spacings=SpAvg(herm_1)
+
+        write(x1,'(i4.4)') Nmat
+        do ii=1,Nsp
+        write(55,'(g13.6)', advance='no') spacings(ii)
+        end do
+        129 deallocate(herm_1%elem)
+        deallocate(herm_1%eval)
+        write(55,*)
+        call cpu_time(end)
+        time=end-start
+        perc=100*jj/Ncycles
+        write(*,'("Elapsed time [s]: ",(G9.2),(G9.2)," % done...")') time, floor(perc)
     end do
-    write(*,*) "Done!"
-    close(78)
-
-end program cos
+    close(55)
+end program Eigenproblem
 \end{lstlisting}
 
-\noindent To test the effective computing performace of my machine with different optimization flags, I wrote a Python script which has the following characteristics:
-\begin{itemize}
-    \item it defines a grid of points which range with exponential spacing from $N_{min}$ and $N_{max}$ arbitrarily chosen; this is made to have equally spaced points on the log-scaled graphs that will be discussed below
-    \item saves the grid on file
-    \item it calls the compiler for \lstinline{cos.f90}
-    \item it repeats the operation for all optimization flags available
-    \item it calls a \lstinline{gnuplot} script to plot results.
-\end{itemize}
-The Python script \lstinline[language=python]{program.py} is the following:
-\begin{lstlisting}[language=python]
-import os
-import numpy
-
-fid=open("grid.dat","w+")   #Open file
-numbers=numpy.logspace(1.,numpy.log10(2500),num=10) # Create the grid
-numbers=numpy.floor(numbers)
-for item in numbers:
-    fid.write("%s\n" % item)
-fid.close()
-
-opt_flags = ["","-O1", "-O2", "-O3", "-Ofast"]
-for item in opt_flags:      #cycle through opt flags
-    comp_comm="gfortran cos.f90 -o cos.out "+item 
-    os.system(comp_comm)    #Call the compiler
-    command = "./cos.out " + item
-    os.system(command)  #Run the program
-
-os.system("gnuplot plotres.gp") #Call gnuplot for graphs
-
-
+The solution of problem 2 is computed by the program \lstinline{Statistics.f90} by using the output files from \lstinline{Eigenproblem.f90}.
+To make some statistics on the data I chose to define a \lstinline{type(histogram)} structure.
+I created this place to store in a compact and ordered way the histograms and all the related informations that I needed for the analysis, but I couldn't fit into a single array:
+\begin{lstlisting}
+type histogram
+    integer :: Nbins, entries
+    double precision ::lower, upper
+    integer, dimension(:), allocatable :: h
+    double precision, dimension(:), allocatable :: hnorm
+    double precision, dimension(:), allocatable :: bounds, bincenters
+end type histogram
 \end{lstlisting}
-This \lstinline{gnuplot} script (\lstinline{plotres.gp}) fits and plots all the computation times; this is done on different images for each optimization flag used.
-The results of the fits are displayed on terminal. 
-\begin{verbatim}
-... line style definition ...
-... set terminal and labels ...
-f(x) = a*x**b # Fitting functions
-g(x) = c*x**d
-h(x) = e*x**p
-...
-fit f(x) "result.dat" using 1:2 via a,b
-fit g(x) "result.dat" using 1:3 via c,d
-# fit h(x) "result.dat" using 1:4 via e,p
-plot "result.dat" using 1:2 title 'StdLoop' with points linestyle 1, \
-     "result.dat" using 1:3 title 'InvLoop' with points linestyle 2, \
-     "result.dat" using 1:4 title 'Intrinsic' with points linestyle 3,\
-     f(x) with line linestyle 4,\
-     g(x) with line linestyle 4,\
-     # h(x) with line linestyle 4 # bad results! not plotted
-... repeat for all opt flags ...
-\end{verbatim}
+
+\lstinline{Statistics.f90} basically works on two of these histograms: it loads the data, it fills them and it saves the relevant information onto an automatically named file like \lstinline{Eigenproblem.f90} did.
+The first one, \lstinline{h1}, contains the data retrieved from diagonalization of random Hermitian matrices, while the second one, \lstinline{h2}, contains data from randomly generated double precision diagonal matrices.
+The generation of random double precision data is made with the intrinsic subroutine \lstinline{random_number}; this data is then sorted in a crescent order using LAPACK subroutine \lstinline{dlasrt} and passed to a appropriately modified \lstinline{SpAvg} function (\lstinline{SpAvgDble}) that returns the normalized spacings.
+
+\begin{lstlisting}
+! External modules:
+include "ModDmat.f90"
+include "ModDebug.f90"
+
+program Statistics
+    use ModDmat
+    use ModDebug
+    implicit none
+    ! Local scalars
+    character(len=100) :: msg, x1, x2, filename, filename_1
+    integer :: Nsp, Ncy, ios, Nbins, ii, seme_dim=4
+    double precision :: h_lenght, h_step, h_lower, h_upper
+    ! Local arrays
+    double precision, dimension(:,:), allocatable :: indata
+    double precision, dimension(:), allocatable :: diag_rnd, sp_diag
+    double precision, dimension(:), allocatable :: h_bounds, h_input_aux
+    integer, dimension(:), allocatable :: h_input, h, seme
+    
+    ! Local custom types
+    type(histogram) :: h1, h2
+    ... filename definition ...
+    Nsp=1999
+    Ncy=450
+    h_lower = 0
+    h_upper = 8
+    Nbins=50
+
+    allocate(indata(Ncy,Nsp),diag_rnd(Nsp+1),sp_diag(Nsp))
+    indata = LoadArray("Sp_2000_0450.dat",Ncy,Nsp)
+
+    h1=InitHisto(h_lower,h_upper,Nbins)
+    h2=InitHisto(h_lower,h_upper,Nbins)
+    do ii=1,Ncy
+        call FillH(h1,indata(ii,:),"y")
+    end do
+
+    call random_seed()
+    call random_seed(size=seme_dim)
+    allocate(seme(seme_dim))
+    call random_seed(get=seme)
+    call random_number(diag_rnd)
+    
+    call dlasrt('I',Nsp+1,diag_rnd,ios)
+    sp_diag=SpAvgDble(diag_rnd)
+
+    call FillH(h2,sp_diag,'y')
+    
+    call HistoToFile(h1,filename)
+    call HistoToFile(h2,filename_1)
+
+end program Statistics
+\end{lstlisting}
+
+Histograms are filled by \lstinline{subroutine FillH(h1,indata,norm)}.
+This function uses an \lstinline{intent(inout)} argument \lstinline{type(histogram) :: h} (previously initialized by a specific function), an argument for input data \lstinline{indata} and a flag that specifies if a normalized histogram has to be saved or not \lstinline{norm}.
+Using \lstinline{FillH}, \lstinline{indata} is sort into \lstinline{h%Nbins} categories comprised into bounds defined in \lstinline{h%bounds} vector; a vector with the center of the bins is also saved for plotting purposes.
+\begin{lstlisting}
+subroutine FillH(h1,indata,norm)
+    implicit none
+    ! Local scalars
+    integer ::  Nentries
+    double precision :: step
+    character(*),intent(in) :: norm
+    ! Local arrays
+    double precision, dimension(:), intent(in) :: indata
+    double precision, dimension(:), allocatable :: h_input_aux
+    integer, dimension(:), allocatable :: h_input
+
+    ! Local custom types
+    type(histogram),intent(inout) :: h1
+
+    step = (h1%upper - h1%lower)/h1%Nbins
+    Nentries=size(indata)
+    allocate(h_input_aux(Nentries),h_input(Nentries))
+    h_input_aux= indata
+    h_input_aux = ceiling(h_input_aux/step)
+    h_input=int(h_input_aux)
+    h1%h(h_input) = h1%h(h_input)+1
+    h1%entries = sum(h1%h)
+    if(norm=="y".and. h1%entries/=0) then
+          h1%hnorm=dble(h1%h)/h1%entries*step
+    end if
+end subroutine FillH
+\end{lstlisting}
+
+In the end, \lstinline{Statistics.f90} gives as output a text file for each histogram, containing center coordinates and normalized values for each bin.
+
+
+
 
 \section*{Results and self evaluation}
-Using Python script and \lstinline{program cos} I tested the computation times for matrices with sizes spanning from 10 to 250{}0.
-I collected these data into graphs, which can be seen in figure \ref{fig:timevsize1} and figure \ref{fig:timevsize2}.
-The first graph contains data collected from an unoptimized algorithm, while data on the remaining ones were collected from  algorithms with increasing optimization.
-\begin{figure}[h]
+To retrieve the fit parameters requested by problem 2, I chose to generate a dataset of normalized eigenvalue spacings retrieved from $2000\times2000$ matrices; I set the \lstinline{Eigenproblem.f90} cycles counter to 450 to generate approximately $9\times10^5$ data points (normalized spacings).
+I filled an histogram with these data, which can be seen in figure \ref{fig:histofit}.
+For both histograms I set $Nbins=50$ and a binning interval spanning from 0 to 8 (dimensionless); this produces little dispersion of data, of the order of $10^2$ points, which is negligible.
+
+The data retrieved from Fortran programs as described above has been fitted to the law \[f(x)=ax^\alpha \exp(bx^\beta)\]
+using gnuplot.
+Results for $a,\alpha,b, \beta$ are the following for the two datasets:
+
+\begin{figure}
 \centering
-\subfloat{    \includegraphics[width=.48\textwidth]{O0.eps}
-\label{fig:no_optimization} }
-\subfloat{    \includegraphics[width=.48\textwidth]{O2.eps}
-\label{fig:O2}}
-\caption{Computation time as a function of the matrix size, without opt flags and with -O2.}
-\label{fig:timevsize1}
+\includegraphics[width=\textwidth]{Hist_2000_0450.eps}
+\caption{Normalized eigenvalue spacings from random Hermitian matrices (blue) and from random real diagonal matrices (orange).}
+\label{fig:histofit}
 \end{figure}
 
-\begin{figure}[]
+\begin{table}[h]
 \centering
-\subfloat{    \includegraphics[width=.48\textwidth]{O3.eps}
-\label{fig:O3} }
-\subfloat{    \includegraphics[width=.48\textwidth]{Ofast.eps}
-\label{fig:Ofast}}
-\caption{Computation time as a function of the matrix size, with -O3 and -Ofast.}
-\label{fig:timevsize2}
-\end{figure}
-On graph I plotted power laws $f(x) = ax^b,$ with $a,b$ parameters retrieved from the data via fit; these power laws look like straight lines on these plots because of the double logarithmic scale.
-The agreement between data and the power law is good for the "InvLoop" method (non-optimized), while is poor for the others; fit results for "Intrinsic" multiplication method are not shown since this data present an evident nonlinear behavior in both log-log plots.
+\caption{Fit results for Hermitian (first row) and real diagonal (second row) matrices.}
+\label{tab:mu_lit}
+\begin{minipage}{16cm}
+\[
+\begin{array}{cccccc}
+%               la tabella inizia qui
+\toprule    
 
-\noindent These graphs suggest that the computation times scale as power laws with the matrix size, at least for user-implemented methods.
-This statement might be verified building a more complex test involving repeated runs of the Python script, the elaboration of the data on a statistical base and the construction of confidence intervals for each data point.
+ &\bm{a} & \bm{\alpha} & \bm{b} & \bm{\beta} & \bm{\chi^2}/\textbf{d.o.f.}\\
+\midrule
+f(x) & 0.0263 \pm 0.0002 &   -0.001\pm 0.003 & 1.033 \pm 0.008 & 0.987 \pm 0.002 &1.6\times 10^{-8}\\
+g(x) & 0.021\pm  0.002  &   -0.04 \pm 0.04  & 0.8 \pm 0.1 &  1.2 \pm 0.1 \pm 0.005 & 3\times10^{-4}\\
 
-Building this program I learned for the first time how to write a Python script and some ways to pass arguments between different languages.
-
-
+\bottomrule                                                 
+%               la tabella finisce qui
+\end{array}
+\]
+\end{minipage}
+\end{table}
+As a conclusion we can observe that some parameters of the two distributions are not compatible and therefore we cannot state that they are the same.
+Nonetheless the similarity between the two is remarkable and it is a clear sign of correlation, which might be confirmed by more specific analysis.
 
 
 \end{document}
