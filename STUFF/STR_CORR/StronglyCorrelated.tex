@@ -123,6 +123,43 @@ Date: \thedate
 \noindent
 \textit{In this file I will collect some elements from the class by prof. dell'Anna.}
 
+\section*{Path Integrals}
+
+Schroedinger Equation is:
+\begin{equation}
+  i\hbar\pdv{t}\ket{\psi}=H(\va{p}, \va{x})\ket{\psi}
+\end{equation}
+with solution
+\begin{equation}
+  \ket{\psi(t')}= e^{\frac{i}{\hbar}}H(\va{x},\va{p})(t'-t)\ket{\psi(t)}
+\end{equation}
+Coordinate representation:
+\begin{align}
+  \braket{x'}{\psi(t')}&=\mel{x'}{U(t',t)}{\psi(t)}\\
+& =\int \dd{\va{x}}\mel{x'}{U(t',t)}{x}\braket{x}{\psi(t)}\\
+&= \int \dd{\va{x}} U(x',t',x,t)\psi(x,t)
+\end{align}
+The generic matrix element of U is:
+\begin{equation}
+  U(\va{x}_f, t_f,\va{x}_i, t_i)= \mel{\va{x}_f}{U(t_f,t_i)}{\va{x}_i} = \mel{\va{x}_f}{e^{\frac{-i}{\hbar}H(\va{p},\va{x})(t'-t)}}{\va{x}_i}
+\end{equation}
+Splitting the time interval into $M$ small pieces and sending $m\to\infty$ one is able (after some long calculations) to write $U$ as:
+\begin{equation}
+  U(\va{x}_f,t_f,\va{x}_i,t_i) = \int \mathcal{D}\bqty{\va{x}(t)}\mathcal{D}\bqty{p(t)}e^{\frac{i}{\hbar}\int_{t_i}^{t_f}\dd{t}\bqty{p(t)\dot{\va{x}}(t) - H(\va{x},\va{p})}}
+\end{equation}
+or in the equivalent form
+\begin{equation}
+  U(\va{x}_f,t_f,\va{x}_i,t_i) = \int \mathcal{D}\bqty{\va{x}(t)}e^{\frac{i}{\hbar}\int_{t_i}^{t_f}\dd{t}\bqty{\frac{m}{2}\pqty{\dv{\va{x}}{t}}^2 - V(\va{x}(t))}}
+\end{equation}
+the analogous for \textbf{statistical mechanics} is derived from the previous using a \textbf{Wick's rotation} $t=-i\tau:$
+\begin{equation}
+  U(\va{x}_f,t_f,\va{x}_i,t_i) = \int \mathcal{D}\bqty{\va{x}(\tau)}e^{-\frac{1}{\hbar}\int_{\tau_i}^{\tau_f}\dd{\tau}\bqty{\frac{m}{2}\pqty{\dv{\va{x}}{\tau}}^2 - V(\va{x}(\tau))}}
+\end{equation}
+\textbf{Partition  function} in statistical mechanics is defined as $\Tr(e^{-\beta H}),$ which is
+\begin{align}
+  Z = \Tr(e^{-\beta H}) &= \int \dd{\va{x}}\ev{e^{-\beta H}}{x}\\
+&= \int \dd{\va{x}}\underset{\va{x}(0) = \va{x}(\beta\hbar)}{\int} \mathcal{D}\bqty{\va{x}(\tau)}e^{-\frac{1}{\hbar}\int_{0}^{\beta\hbar}\dd{\tau}\bqty{\frac{m}{2}\pqty{\dv{\va{x}}{\tau}}^2 - V(\va{x}(\tau))}}
+ \end{align}
 
 
 

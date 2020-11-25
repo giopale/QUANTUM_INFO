@@ -1,0 +1,137 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Thin Formal Letter
+% LaTeX Template
+% Version 2.0 (7/2/17)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% WikiBooks (http://en.wikibooks.org/wiki/LaTeX/Letters) with modifications by 
+% Vel (vel@LaTeXTemplates.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[boldsubject,italicsignature,smartindent]{letteracdp} % 10pt font size default, 11pt and 12pt are also possible
+
+\usepackage{geometry} % Required for adjusting page dimensions
+\usepackage[italian]{babel}
+%\longindentation=0pt % Un-commenting this line will push the closing "Sincerely," to the left of the page
+
+\geometry{
+	paper=a4paper, % Change to letterpaper for US letter
+	top=3cm, % Top margin
+	bottom=2cm, % Bottom margin
+	left=3.5cm, % Left margin
+	right=3.5cm, % Right margin
+	%showframe, % Uncomment to show how the type block is set on the page
+}
+
+\usepackage[T1]{fontenc} % Output font encoding for international characters
+\usepackage[utf8]{inputenc} % Required for inputting international characters
+
+% \usepackage{stix} % Use the Stix font by default
+
+\usepackage{microtype} % Improve justification
+\usepackage{graphicx}
+% \usepackage{amsmath}
+% \usepackage{mathtools}
+% \usepackage{amsfonts}
+% \usepackage{bbold}
+% \usepackage{tabulary}
+% \usepackage{amsthm}
+\usepackage{booktabs}
+\usepackage{amssymb}
+% \usepackage{braket}
+% \usepackage{xfor}
+% \usepackage{substr}
+\usepackage{tabularx}
+\usepackage{array}
+% \usepackage{multirow}
+% \usepackage{xcolor}
+% \usepackage{xcolor}
+% \usepackage{color}
+% \usepackage{wrapfig}
+% \usepackage{subfig}
+\usepackage{caption}
+% \usepackage{blindtext}
+\usepackage{siunitx}
+\usepackage{bm}
+% \captionsetup{format=hang,font=small}
+% \captionsetup{tableposition=top,figureposition=bottom,font=small}
+% \captionsetup[table]{skip=8pt}
+
+%\setlength\parindent{0pt}
+\usepackage{hyperref}
+
+
+\place{Padova}
+\date{14 luglio 2017}
+%----------------------------------------------------------------------------------------
+%	YOUR NAME & ADDRESS SECTION
+%----------------------------------------------------------------------------------------
+
+\signature{Giorgio Palermo} % Your name for the signature at the bottom
+
+\address{Giorgio Palermo\\ Via Bissolo 18 \\ 31033 Castelfranco Veneto, TV \\ Stud. ID:1238258} % Your address and phone number
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%	ADDRESSEE SECTION
+%----------------------------------------------------------------------------------------
+
+\begin{letter}{To:\\Prof. Alexandre Tkatchenko\\Département Physique et sciences des matériaux\\Campus Limpertsberg, Université du Luxembourg\\
+162 A, avenue de la Faïencerie\\ 
+L-1511 Luxembourg} % Name/title of the addressee
+
+%----------------------------------------------------------------------------------------
+%	LETTER CONTENT SECTION
+%----------------------------------------------------------------------------------------
+
+\opening{\textbf{Subject:} Provisional MSc grades}
+Dear Prof. Tkatchenko,
+I report in the following table my provisional grades for my MSc:
+
+\begin{table}
+\centering
+    \begin{tabular}{lccc}
+    \toprule
+        \textbf{Desctiption}  &  \textbf{Grade} & \textbf{ETCS} \\
+    \midrule
+        Stochastic Processes	&	28/01/20	&	28/30	&	9	\\
+Statistical Mechanics	&	19/02/20	&	27/30	&	6	\\
+Physics Laboratory	&	27/02/30	&	30/30	&	6	\\
+Structure of Matter	&	17/06/20	&	30/30 L	&	6	\\
+Introduction to Many Body theory	&	19/06/20	&	29/30	&	6	\\
+Solid State Physics	&	29/08/20	&	28/30	&	6	\\
+Models of Theoretical Physics	&	15/09/20	&	30/30	&	6	\\
+Strongly Correlated Systems	&	-	&	-	&	6	\\
+Statistical Mechanics of Complex Systems	&	-	&	-	&	6	\\
+General Relativity	&	-	&	-	&	6	\\
+Complex Systems	&	-	&	-	&	6	\\
+Biological Physics	&	-	&	-	&	6	\\
+Machine Learning	&	-	&	-	&	6	\\
+    \bottomrule
+    \end{tabular}
+\end{table}
+
+
+
+
+
+
+%----------------------------------------------------------------------------------------
+
+\end{letter}
+ 
+\end{document}
